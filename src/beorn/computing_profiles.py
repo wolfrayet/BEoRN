@@ -109,7 +109,18 @@ class profiles:
         self.r_grid_cell = self.r_grid
         self.Ngdot_ion = Ngdot_ion(param, zz[:,None], Mh_history,dMh_dt)
 
-
+class alpha_profiles(profiles):
+    def __init__(self, param, alpha_bin_min, alpha_bin_max, binn):
+        super().__init__(param)
+        self.alpha_bin = np.linspace(alpha_bin_min, alpha_bin_max, binn)
+        
+    def solve_alpha(self, param):
+        profiles_list = []
+        for alpha in self.alpha_bin:
+            param.source.alpha_MAR = alpha
+            profile_result = self.solve(param)
+            profiles_list.append(profile_result)
+        self.profiles_list = profiles_list
 
 
 def Ngdot_ion(param, zz, Mh,dMh_dt):
